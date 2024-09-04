@@ -7,7 +7,7 @@ const TasksFilter = () => {
 				<button className='selected'>All</button>
 			</li>
 			<li>
-				<button>Active</button>
+				<button  >Active</button>
 			</li>
 			<li>
 				<button>Completed</button>

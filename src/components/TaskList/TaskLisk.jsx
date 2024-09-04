@@ -1,14 +1,8 @@
+import { useState } from 'react'
 import Task from '../Task/Task'
 import './TaskList.css'
 
-const TaskList = () => {
-	
-	const tasks = [
-		{ title: 'Completed task', createdAt: '17 seconds ago', completed: true },
-		{ title: 'Editing task', createdAt: '5 minutes ago', completed: false },
-		{ title: 'Active task', createdAt: '5 minutes ago', completed: false },
-	]
-
+const TaskList = ({ tasks, onToggleTaskCompletion, onDeleteTask }) => {
 	return (
 		<ul className='todo-list'>
 			{tasks.map(task => (
@@ -17,6 +11,8 @@ const TaskList = () => {
 					title={task.title}
 					createdAt={task.createdAt}
 					completed={task.completed}
+					onToggle={() => onToggleTaskCompletion(task.title, task.createdAt)}
+					onDelete={() => onDeleteTask(task.title, task.createdAt)}
 				/>
 			))}
 		</ul>
