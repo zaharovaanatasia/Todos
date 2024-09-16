@@ -1,18 +1,13 @@
-import PropTypes from "prop-types";
-import TasksFilter from "../TasksFilter/TasksFilter";
-import "./Footer.css";
+import PropTypes from 'prop-types';
+import TasksFilter from '../TasksFilter/TasksFilter';
+import './Footer.css';
 
-const Footer = ({
-  filter = "all",
-  setFilter = () => {},
-  onClearCompletedTask = () => {},
-  activeCount = 0,
-}) => {
-  const itemLabel = activeCount === 1 ? "item" : "items";
+const Footer = ({ filter = 'all', setFilter = () => {}, onClearCompletedTask = () => {}, activeCount = 0 }) => {
+  const itemLabel = activeCount === 1 ? 'item' : 'items';
   return (
     <footer className="footer">
       <span className="todo-count">
-        {" "}
+        {' '}
         {activeCount} {itemLabel} left
       </span>
       <TasksFilter filter={filter} setFilter={setFilter} />
