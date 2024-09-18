@@ -56,6 +56,7 @@ const Task = ({
             onTimerChangeStart={onTimerChangeStart}
             onTimerChangePause={onTimerChangePause}
             taskId={id}
+            isTaskCompleted={completed}
           />
           <span className="created">created {createdAtFormatted}</span>
         </label>
