@@ -23,8 +23,8 @@ const TaskList = ({
             onDelete={onDeleteTask}
             onEdit={onEditTask}
             timer={task.timer}
-            onTimerChangeStart={handleTimerUpdate}
-            onTimerChangePause={handleTimerPause}
+            onTimerChangeStart={(taskId, newTimerValue) => handleTimerUpdate(taskId, newTimerValue)}
+            onTimerChangePause={(taskId, newTimerValue) => handleTimerPause(taskId, newTimerValue)}
           />
         </li>
       ))}

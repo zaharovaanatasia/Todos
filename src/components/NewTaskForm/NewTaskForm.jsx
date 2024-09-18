@@ -8,9 +8,9 @@ const NewTaskForm = ({ onAddTask = () => {} }) => {
   const [taskSeconds, setTaskSeconds] = useState('');
 
   const handleKeyDown = (e) => {
-    if (e.key === 'Enter' && taskTitle.trim()) {
+    if (e.key === 'Enter') {
       const totalTime = (parseInt(taskMinutes) || 0) * 60 + (parseInt(taskSeconds) || 0);
-      if (totalTime >= 0) {
+      if (taskTitle.trim() && totalTime > 0) {
         onAddTask(taskTitle.trim(), totalTime);
         setTaskTitle('');
         setTaskMinutes('');
@@ -18,7 +18,6 @@ const NewTaskForm = ({ onAddTask = () => {} }) => {
       }
     }
   };
-
   return (
     <form className="new-task-form">
       <input
@@ -38,6 +37,7 @@ const NewTaskForm = ({ onAddTask = () => {} }) => {
         value={taskMinutes}
         onChange={(e) => setTaskMinutes(e.target.value)}
         onKeyDown={handleKeyDown}
+        required
       />
       <input
         type="number"
@@ -46,6 +46,7 @@ const NewTaskForm = ({ onAddTask = () => {} }) => {
         value={taskSeconds}
         onChange={(e) => setTaskSeconds(e.target.value)}
         onKeyDown={handleKeyDown}
+        required
       />
     </form>
   );

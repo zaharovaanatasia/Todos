@@ -4,20 +4,30 @@ import { useEffect, useState } from 'react';
 const Timer = ({ timerValue, onTimerChangeStart = () => {}, onTimerChangePause = () => {}, taskId }) => {
   const [timer, setTimer] = useState(timerValue);
   const [isRunning, setIsRunning] = useState(false);
+  const [startTime, setStartTime] = useState(null); // запуск вр
 
   useEffect(() => {
-    if (isRunning) {
-      const interval = setInterval(() => {
-        setTimer((prevTimer) => {
-          const newTimer = prevTimer + 1;
-          onTimerChangeStart(taskId, newTimer);
-          return newTimer;
-        });
-      }, 1000);
+    let interval;
 
-      return () => clearInterval(interval);
+    if (isRunning) {
+      interval = setInterval(() => {
+        const currentTime = Date.now();
+        const elapsedTime = Math.floor((currentTime - startTime) / 1000);
+        const newTimer = timerValue - elapsedTime;
+
+        if (newTimer > 0) {
+          setTimer(newTimer);
+          onTimerChangeStart(taskId, newTimer);
+        } else {
+          setTimer(0);
+          setIsRunning(false);
+          onTimerChangeStart(taskId, 0);
+        }
+      }, 1000);
     }
-  }, [isRunning, taskId, onTimerChangeStart]);
+
+    return () => clearInterval(interval);
+  }, [isRunning, startTime, timerValue, taskId, onTimerChangeStart]);
 
   useEffect(() => {
     setTimer(timerValue);
@@ -25,6 +35,7 @@ const Timer = ({ timerValue, onTimerChangeStart = () => {}, onTimerChangePause =
 
   const handleStart = () => {
     if (!isRunning) {
+      setStartTime(Date.now());
       setIsRunning(true);
     }
   };
