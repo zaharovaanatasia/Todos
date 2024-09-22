@@ -1,54 +1,12 @@
 import PropTypes from 'prop-types';
-import { useEffect, useState } from 'react';
 
-const Timer = ({ timerValue, onTimerUpdate = () => {}, onTimerPause = () => {}, taskId, isTaskCompleted }) => {
-  const [timer, setTimer] = useState(timerValue);
-  const [isRunning, setIsRunning] = useState(false);
-  const [startTime, setStartTime] = useState(null);
-
-  useEffect(() => {
-    let interval;
-
-    if (isRunning && !isTaskCompleted) {
-      const start = Date.now();
-      interval = setInterval(() => {
-        const currentTime = Date.now();
-        const elapsedTime = Math.floor((currentTime - start) / 1000);
-        const newTimer = timerValue - elapsedTime;
-
-        if (newTimer > 0) {
-          setTimer(newTimer);
-          onTimerUpdate(taskId, newTimer);
-        } else {
-          clearInterval(interval);
-          setTimer(0);
-          setIsRunning(false);
-          onTimerUpdate(taskId, 0);
-        }
-      }, 1000);
-    }
-
-    return () => clearInterval(interval);
-  }, [isRunning, startTime, timerValue, taskId, onTimerUpdate, isTaskCompleted]);
-
-  useEffect(() => {
-    if (timerValue !== timer) {
-      setTimer(timerValue);
-    }
-  }, [timerValue, timer]);
-
+const Timer = ({ timer, onTimerUpdate = () => {}, onTimerPause = () => {}, taskId, isTaskCompleted }) => {
   const handleStart = () => {
-    if (!isRunning && !isTaskCompleted) {
-      setStartTime(Date.now());
-      setIsRunning(true);
-    }
+    onTimerUpdate(taskId, true);
   };
 
   const handlePause = () => {
-    if (isRunning) {
-      setIsRunning(false);
-      onTimerPause();
-    }
+    onTimerPause(taskId);
   };
 
   const formatTime = (timer) => {
@@ -67,7 +25,7 @@ const Timer = ({ timerValue, onTimerUpdate = () => {}, onTimerPause = () => {}, 
 };
 
 Timer.propTypes = {
-  timerValue: PropTypes.number,
+  timer: PropTypes.number,
   onTimerUpdate: PropTypes.func,
   onTimerPause: PropTypes.func,
   taskId: PropTypes.number,

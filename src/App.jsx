@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import NewTaskForm from './components/NewTaskForm/NewTaskForm';
 import TaskList from './components/TaskList/TaskList';
@@ -58,27 +58,61 @@ const App = () => {
 
   //добавление новой задачи
 
-  const onAddTask = (newTitle, duration) => {
+  const onAddTask = (newTitle, timer) => {
     const newTask = {
       title: newTitle,
       id: Date.now(),
       createdAt: new Date(),
       completed: false,
-      timer: duration,
+      timer,
+      timerRunning: false,
+      startTime: null,
     };
     setTasks([newTask, ...tasks]);
   };
 
-  const onTimerUpdate = (taskId, newTimerValue) => {
-    const updatedTasks = tasks.map((task) => (task.id === taskId ? { ...task, timer: newTimerValue } : task));
+  const onTimerUpdate = (taskId, isRunning) => {
+    const updatedTasks = tasks.map((task) => {
+      if (task.id === taskId) {
+        return { ...task, timerRunning: isRunning, startTime: isRunning ? Date.now() : null };
+      }
+      return task;
+    });
     setTasks(updatedTasks);
   };
 
-
+  // пауза таймера
   const onTimerPause = (taskId) => {
-    const updatedTasks = tasks.map((task) => (task.id === taskId ? { ...task, timerRunning: false } : task));
+    const updatedTasks = tasks.map((task) => {
+      if (task.id === taskId) {
+        return { ...task, timerRunning: false };
+      }
+      return task;
+    });
     setTasks(updatedTasks);
   };
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      const updatedTasks = tasks.map((task) => {
+        if (task.timerRunning && task.startTime) {
+          const currentTime = Date.now();
+          const elapsedTime = Math.floor((currentTime - task.startTime) / 1000);
+          const newTimer = task.timer - elapsedTime;
+
+          if (newTimer > 0) {
+            return { ...task, timer: newTimer, startTime: currentTime };
+          } else {
+            return { ...task, timer: 0, timerRunning: false, startTime: null };
+          }
+        }
+        return task;
+      });
+      setTasks(updatedTasks);
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, [tasks]);
 
   return (
     <section className="todoapp">

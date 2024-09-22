@@ -52,7 +52,7 @@ const Task = ({
           <span className="description">{title}</span>
 
           <Timer
-            timerValue={timer}
+            timer={timer}
             onTimerUpdate={onTimerUpdate}
             onTimerPause={onTimerPause}
             taskId={id}
