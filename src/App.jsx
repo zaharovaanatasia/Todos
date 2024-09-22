@@ -10,7 +10,7 @@ const App = () => {
   const [filter, setFilter] = useState('all');
 
   // переключатель
-  const toggleTaskCompletion = (taskId) => {
+  const onToggle = (taskId) => {
     const updatedTasks = tasks.map((task) => {
       if (task.id === taskId) {
         return { ...task, completed: !task.completed };
@@ -21,13 +21,13 @@ const App = () => {
   };
 
   // удаление
-  const deleteTask = (taskId) => {
+  const onDelete = (taskId) => {
     const updatedTasks = tasks.filter((task) => task.id !== taskId);
     setTasks(updatedTasks);
   };
 
   // редактирование
-  const editTask = (taskId, newTitle) => {
+  const onEdit = (taskId, newTitle) => {
     const updatedTasks = tasks.map((task) => {
       return task.id === taskId ? { ...task, title: newTitle } : task;
     });
@@ -46,7 +46,7 @@ const App = () => {
   });
 
   // очистка выполненных задач
-  const ClearCompletedTask = () => {
+  const onClearTask = () => {
     const updatedTasks = tasks.filter((task) => !task.completed);
     setTasks(updatedTasks);
   };
@@ -58,7 +58,7 @@ const App = () => {
 
   //добавление новой задачи
 
-  const addTask = (newTitle, duration) => {
+  const onAddTask = (newTitle, duration) => {
     const newTask = {
       title: newTitle,
       id: Date.now(),
@@ -69,12 +69,13 @@ const App = () => {
     setTasks([newTask, ...tasks]);
   };
 
-  const handleTimerUpdate = (taskId, newTimerValue) => {
+  const onTimerUpdate = (taskId, newTimerValue) => {
     const updatedTasks = tasks.map((task) => (task.id === taskId ? { ...task, timer: newTimerValue } : task));
     setTasks(updatedTasks);
   };
 
-  const handleTimerPause = (taskId) => {
+
+  const onTimerPause = (taskId) => {
     const updatedTasks = tasks.map((task) => (task.id === taskId ? { ...task, timerRunning: false } : task));
     setTasks(updatedTasks);
   };
@@ -84,22 +85,22 @@ const App = () => {
       <div className="app">
         <header className="header">
           <h1>Todos</h1>
-          <NewTaskForm onAddTask={addTask} />
+          <NewTaskForm onAddTask={onAddTask} />
         </header>
         <section className="main">
           <TaskList
             tasks={filterTasks}
-            onToggleTaskCompletion={toggleTaskCompletion}
-            onDeleteTask={deleteTask}
-            onEditTask={editTask}
-            handleTimerUpdate={handleTimerUpdate}
-            handleTimerPause={handleTimerPause}
+            onToggle={onToggle}
+            onDelete={onDelete}
+            onEdit={onEdit}
+            onTimerUpdate={onTimerUpdate}
+            onTimerPause={onTimerPause}
           />
           <Footer
             tasks={tasks}
             filter={filter}
             setFilter={setFilter}
-            onClearCompletedTask={ClearCompletedTask}
+            onClearTask={onClearTask}
             activeCount={activeTasksCount()}
           />
         </section>

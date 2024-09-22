@@ -2,14 +2,15 @@ import { useState } from 'react';
 import './NewTaskForm.css';
 import PropTypes from 'prop-types';
 
-const NewTaskForm = ({ onAddTask = () => {} }) => {
+const NewTaskForm = ({ onAddTask }) => {
   const [taskTitle, setTaskTitle] = useState('');
   const [taskMinutes, setTaskMinutes] = useState('');
   const [taskSeconds, setTaskSeconds] = useState('');
 
-  const handleKeyDown = (e) => {
+  const onKeyDown = (e) => {
     if (e.key === 'Enter') {
       const totalTime = (parseInt(taskMinutes) || 0) * 60 + (parseInt(taskSeconds) || 0);
+
       if (taskTitle.trim() && totalTime > 0) {
         onAddTask(taskTitle.trim(), totalTime);
         setTaskTitle('');
@@ -19,14 +20,13 @@ const NewTaskForm = ({ onAddTask = () => {} }) => {
     }
   };
   return (
-    <form className="new-task-form">
+    <form className="new-task-form" onKeyDown={onKeyDown}>
       <input
         type="text"
         className="new-todo"
         placeholder="What needs to be done?"
         value={taskTitle}
         onChange={(e) => setTaskTitle(e.target.value)}
-        onKeyDown={handleKeyDown}
         required
         autoFocus
       />
@@ -36,7 +36,6 @@ const NewTaskForm = ({ onAddTask = () => {} }) => {
         placeholder="Min"
         value={taskMinutes}
         onChange={(e) => setTaskMinutes(e.target.value)}
-        onKeyDown={handleKeyDown}
         required
       />
       <input
@@ -45,7 +44,6 @@ const NewTaskForm = ({ onAddTask = () => {} }) => {
         placeholder="Sec"
         value={taskSeconds}
         onChange={(e) => setTaskSeconds(e.target.value)}
-        onKeyDown={handleKeyDown}
         required
       />
     </form>

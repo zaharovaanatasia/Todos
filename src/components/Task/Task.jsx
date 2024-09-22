@@ -13,8 +13,8 @@ const Task = ({
   onDelete = () => {},
   onEdit = () => {},
   timer,
-  onTimerChangeStart,
-  onTimerChangePause,
+  onTimerUpdate,
+  onTimerPause,
 }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [editedTitle, setEditedTitle] = useState(title);
@@ -31,7 +31,7 @@ const Task = ({
     setIsEditing(false);
   };
 
-  const handleKeyDown = (e) => {
+  const onKeyDown = (e) => {
     if (e.key === 'Enter') {
       handleSave();
     } else if (e.key === 'Escape') {
@@ -53,8 +53,8 @@ const Task = ({
 
           <Timer
             timerValue={timer}
-            onTimerChangeStart={onTimerChangeStart}
-            onTimerChangePause={onTimerChangePause}
+            onTimerUpdate={onTimerUpdate}
+            onTimerPause={onTimerPause}
             taskId={id}
             isTaskCompleted={completed}
           />
@@ -76,7 +76,7 @@ const Task = ({
             className="edit"
             value={editedTitle}
             onChange={(e) => setEditedTitle(e.target.value)}
-            onKeyDown={handleKeyDown}
+            onKeyDown={onKeyDown}
             onBlur={handleSave}
           />
         </form>
@@ -94,8 +94,8 @@ Task.propTypes = {
   onDelete: PropTypes.func,
   onEdit: PropTypes.func,
   timer: PropTypes.number,
-  onTimerChangeStart: PropTypes.func,
-  onTimerChangePause: PropTypes.func,
+  onTimerUpdate: PropTypes.func,
+  onTimerPause: PropTypes.func,
 };
 
 export default Task;

@@ -1,13 +1,7 @@
 import PropTypes from 'prop-types';
 import { useEffect, useState } from 'react';
 
-const Timer = ({
-  timerValue,
-  onTimerChangeStart = () => {},
-  onTimerChangePause = () => {},
-  taskId,
-  isTaskCompleted,
-}) => {
+const Timer = ({ timerValue, onTimerUpdate = () => {}, onTimerPause = () => {}, taskId, isTaskCompleted }) => {
   const [timer, setTimer] = useState(timerValue);
   const [isRunning, setIsRunning] = useState(false);
   const [startTime, setStartTime] = useState(null);
@@ -24,18 +18,18 @@ const Timer = ({
 
         if (newTimer > 0) {
           setTimer(newTimer);
-          onTimerChangeStart(taskId, newTimer);
+          onTimerUpdate(taskId, newTimer);
         } else {
           clearInterval(interval);
           setTimer(0);
           setIsRunning(false);
-          onTimerChangeStart(taskId, 0);
+          onTimerUpdate(taskId, 0);
         }
       }, 1000);
     }
 
     return () => clearInterval(interval);
-  }, [isRunning, startTime, timerValue, taskId, onTimerChangeStart, isTaskCompleted]);
+  }, [isRunning, startTime, timerValue, taskId, onTimerUpdate, isTaskCompleted]);
 
   useEffect(() => {
     if (timerValue !== timer) {
@@ -53,7 +47,7 @@ const Timer = ({
   const handlePause = () => {
     if (isRunning) {
       setIsRunning(false);
-      onTimerChangePause();
+      onTimerPause();
     }
   };
 
@@ -74,8 +68,8 @@ const Timer = ({
 
 Timer.propTypes = {
   timerValue: PropTypes.number,
-  onTimerChangeStart: PropTypes.func,
-  onTimerChangePause: PropTypes.func,
+  onTimerUpdate: PropTypes.func,
+  onTimerPause: PropTypes.func,
   taskId: PropTypes.number,
   isTaskCompleted: PropTypes.bool,
 };

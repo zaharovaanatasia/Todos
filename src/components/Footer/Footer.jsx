@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import TasksFilter from '../TasksFilter/TasksFilter';
 import './Footer.css';
 
-const Footer = ({ filter = 'all', setFilter = () => {}, onClearCompletedTask = () => {}, activeCount = 0 }) => {
+const Footer = ({ filter = 'all', setFilter = () => {}, onClearTask = () => {}, activeCount = 0 }) => {
   const itemLabel = activeCount === 1 ? 'item' : 'items';
   return (
     <footer className="footer">
@@ -11,7 +11,7 @@ const Footer = ({ filter = 'all', setFilter = () => {}, onClearCompletedTask = (
         {activeCount} {itemLabel} left
       </span>
       <TasksFilter filter={filter} setFilter={setFilter} />
-      <button className="clear-completed" onClick={onClearCompletedTask}>
+      <button className="clear-completed" onClick={onClearTask}>
         Clear completed
       </button>
     </footer>
@@ -21,7 +21,7 @@ const Footer = ({ filter = 'all', setFilter = () => {}, onClearCompletedTask = (
 Footer.propTypes = {
   filter: PropTypes.string,
   setFilter: PropTypes.func,
-  onClearCompletedTask: PropTypes.func,
+  onClearTask: PropTypes.func,
   activeCount: PropTypes.number,
 };
 

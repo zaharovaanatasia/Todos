@@ -4,11 +4,11 @@ import './TaskList.css';
 
 const TaskList = ({
   tasks = [],
-  onToggleTaskCompletion = () => {},
-  onDeleteTask = () => {},
-  onEditTask = () => {},
-  handleTimerUpdate = () => {},
-  handleTimerPause = () => {},
+  onToggle = () => {},
+  onDelete = () => {},
+  onEdit = () => {},
+  onTimerUpdate = () => {},
+  onTimerPause = () => {},
 }) => {
   return (
     <ul className="todo-list">
@@ -19,12 +19,12 @@ const TaskList = ({
             title={task.title}
             createdAt={task.createdAt}
             completed={task.completed}
-            onToggle={onToggleTaskCompletion}
-            onDelete={onDeleteTask}
-            onEdit={onEditTask}
+            onToggle={onToggle}
+            onDelete={onDelete}
+            onEdit={onEdit}
             timer={task.timer}
-            onTimerChangeStart={(taskId, newTimerValue) => handleTimerUpdate(taskId, newTimerValue)}
-            onTimerChangePause={(taskId, newTimerValue) => handleTimerPause(taskId, newTimerValue)}
+            onTimerUpdate={(taskId, newTimerValue) => onTimerUpdate(taskId, newTimerValue)}
+            onTimerPause={(taskId, newTimerValue) => onTimerPause(taskId, newTimerValue)}
           />
         </li>
       ))}
@@ -41,11 +41,11 @@ TaskList.propTypes = {
       duration: PropTypes.number,
     })
   ),
-  onToggleTaskCompletion: PropTypes.func,
-  onDeleteTask: PropTypes.func,
-  onEditTask: PropTypes.func,
-  handleTimerUpdate: PropTypes.func,
-  handleTimerPause: PropTypes.func,
+  onToggle: PropTypes.func,
+  onDelete: PropTypes.func,
+  onEdit: PropTypes.func,
+  onTimerUpdate: PropTypes.func,
+  onTimerPause: PropTypes.func,
 };
 
 export default TaskList;
