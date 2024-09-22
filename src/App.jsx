@@ -13,11 +13,17 @@ const App = () => {
   const onToggle = (taskId) => {
     const updatedTasks = tasks.map((task) => {
       if (task.id === taskId) {
-        return { ...task, completed: !task.completed };
+        const updatedTask = { ...task, completed: !task.completed };
+
+        if (!updatedTask.completed) {
+          return updatedTask;
+        } else {
+          return { ...updatedTask, timerRunning: false, startTime: null };
+        }
       }
       return task;
     });
-    setTasks(() => updatedTasks);
+    setTasks(updatedTasks);
   };
 
   // удаление
@@ -29,7 +35,10 @@ const App = () => {
   // редактирование
   const onEdit = (taskId, newTitle) => {
     const updatedTasks = tasks.map((task) => {
-      return task.id === taskId ? { ...task, title: newTitle } : task;
+      if (task.id === taskId) {
+        return { ...task, title: newTitle, timerRunning: false, startTime: null };
+      }
+      return task;
     });
     setTasks(updatedTasks);
   };
@@ -103,7 +112,7 @@ const App = () => {
           if (newTimer > 0) {
             return { ...task, timer: newTimer, startTime: currentTime };
           } else {
-            return { ...task, timer: 0, timerRunning: false, startTime: null };
+            return { ...task, timer: 0, timerRunning: false, startTime: null, completed: true };
           }
         }
         return task;
