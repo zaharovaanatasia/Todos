@@ -11,21 +11,19 @@ const App = () => {
 
   // переключатель
   const onToggle = (taskId) => {
-    const updatedTasks = tasks.map((task) => {
-      if (task.id === taskId) {
-        const updatedTask = { ...task, completed: !task.completed };
-
-        if (!updatedTask.completed) {
+    setTasks((prevTasks) =>
+      prevTasks.map((task) => {
+        if (task.id === taskId) {
+          const updatedTask = { ...task, completed: !task.completed };
+          if (updatedTask.completed) {
+            return { ...updatedTask, timerRunning: false, startTime: null };
+          }
           return updatedTask;
-        } else {
-          return { ...updatedTask, timerRunning: false, startTime: null };
         }
-      }
-      return task;
-    });
-    setTasks(updatedTasks);
+        return task;
+      })
+    );
   };
-
   // удаление
   const onDelete = (taskId) => {
     const updatedTasks = tasks.filter((task) => task.id !== taskId);
@@ -80,25 +78,12 @@ const App = () => {
     setTasks([newTask, ...tasks]);
   };
 
-  const onTimerUpdate = (taskId, isRunning) => {
-    const updatedTasks = tasks.map((task) => {
-      if (task.id === taskId) {
-        return { ...task, timerRunning: isRunning, startTime: isRunning ? Date.now() : null };
-      }
-      return task;
-    });
-    setTasks(updatedTasks);
-  };
-
-  // пауза таймера
-  const onTimerPause = (taskId) => {
-    const updatedTasks = tasks.map((task) => {
-      if (task.id === taskId) {
-        return { ...task, timerRunning: false };
-      }
-      return task;
-    });
-    setTasks(updatedTasks);
+  const onTimerToggle = (taskId, isRunning) => {
+    setTasks((prevTasks) =>
+      prevTasks.map((task) =>
+        task.id === taskId ? { ...task, timerRunning: isRunning, startTime: isRunning ? Date.now() : null } : task
+      )
+    );
   };
 
   useEffect(() => {
@@ -136,8 +121,7 @@ const App = () => {
             onToggle={onToggle}
             onDelete={onDelete}
             onEdit={onEdit}
-            onTimerUpdate={onTimerUpdate}
-            onTimerPause={onTimerPause}
+            onTimerToggle={onTimerToggle}
           />
           <Footer
             tasks={tasks}

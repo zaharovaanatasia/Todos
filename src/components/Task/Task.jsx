@@ -13,8 +13,8 @@ const Task = ({
   onDelete = () => {},
   onEdit = () => {},
   timer,
-  onTimerUpdate,
-  onTimerPause,
+  timerRunning,
+  onTimerToggle,
 }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [editedTitle, setEditedTitle] = useState(title);
@@ -52,11 +52,11 @@ const Task = ({
           <span className="description">{title}</span>
 
           <Timer
-            timer={timer}
-            onTimerUpdate={onTimerUpdate}
-            onTimerPause={onTimerPause}
             taskId={id}
+            timer={timer}
             isTaskCompleted={completed}
+            timerRunning={timerRunning}
+            onTimerToggle={onTimerToggle}
           />
           <span className="created">created {createdAtFormatted}</span>
         </label>
@@ -94,8 +94,8 @@ Task.propTypes = {
   onDelete: PropTypes.func,
   onEdit: PropTypes.func,
   timer: PropTypes.number,
-  onTimerUpdate: PropTypes.func,
-  onTimerPause: PropTypes.func,
+  timerRunning: PropTypes.bool.isRequired,
+  onTimerToggle: PropTypes.func.isRequired,
 };
 
 export default Task;
