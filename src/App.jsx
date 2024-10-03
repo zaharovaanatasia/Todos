@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback, useMemo } from 'react';
 import PropTypes from 'prop-types';
 import NewTaskForm from './components/NewTaskForm/NewTaskForm';
 import TaskList from './components/TaskList/TaskList';
@@ -9,8 +9,8 @@ const App = () => {
   const [tasks, setTasks] = useState([]);
   const [filter, setFilter] = useState('all');
 
-  // переключатель
-  const onToggle = (taskId) => {
+  // Переключатель
+  const onToggle = useCallback((taskId) => {
     setTasks((prevTasks) =>
       prevTasks.map((task) => {
         if (task.id === taskId) {
@@ -23,49 +23,51 @@ const App = () => {
         return task;
       })
     );
-  };
-  // удаление
-  const onDelete = (taskId) => {
-    const updatedTasks = tasks.filter((task) => task.id !== taskId);
-    setTasks(updatedTasks);
-  };
+  }, []);
 
-  // редактирование
-  const onEdit = (taskId, newTitle) => {
-    const updatedTasks = tasks.map((task) => {
-      if (task.id === taskId) {
-        return { ...task, title: newTitle, timerRunning: false, startTime: null };
+  // Удаление
+  const onDelete = useCallback((taskId) => {
+    setTasks((prevTasks) => prevTasks.filter((task) => task.id !== taskId));
+  }, []);
+
+  // Редактирование
+  const onEdit = useCallback((taskId, newTitle) => {
+    setTasks((prevTasks) =>
+      prevTasks.map((task) => {
+        if (task.id === taskId) {
+          return { ...task, title: newTitle, timerRunning: false, startTime: null };
+        }
+        return task;
+      })
+    );
+  }, []);
+
+  // Фильтрация
+  const filterTasks = useMemo(() => {
+    return tasks.filter((task) => {
+      if (filter === 'completed') {
+        return task.completed;
       }
-      return task;
+      if (filter === 'active') {
+        return !task.completed;
+      }
+      return true;
     });
-    setTasks(updatedTasks);
-  };
+  }, [tasks, filter]);
 
-  // фильтрация
-  const filterTasks = tasks.filter((task) => {
-    if (filter === 'completed') {
-      return task.completed;
-    }
-    if (filter === 'active') {
-      return !task.completed;
-    }
-    return true;
-  });
-
-  // очистка выполненных задач
-  const onClearTask = () => {
+  // Очистка выполненных задач
+  const onClearTask = useCallback(() => {
     const updatedTasks = tasks.filter((task) => !task.completed);
     setTasks(updatedTasks);
-  };
+  }, [tasks]);
 
-  // активные задачи в footer
-  const activeTasksCount = () => {
+  // Активные задачи в footer
+  const activeTasksCount = useMemo(() => {
     return tasks.filter((task) => !task.completed).length;
-  };
+  }, [tasks]);
 
-  //добавление новой задачи
-
-  const onAddTask = (newTitle, timer) => {
+  // Добавление новой задачи
+  const onAddTask = useCallback((newTitle, timer) => {
     const newTask = {
       title: newTitle,
       id: Date.now(),
@@ -75,16 +77,16 @@ const App = () => {
       timerRunning: false,
       startTime: null,
     };
-    setTasks([newTask, ...tasks]);
-  };
+    setTasks((prevTasks) => [newTask, ...prevTasks]);
+  }, []);
 
-  const onTimerToggle = (taskId, isRunning) => {
+  const onTimerToggle = useCallback((taskId, isRunning) => {
     setTasks((prevTasks) =>
       prevTasks.map((task) =>
         task.id === taskId ? { ...task, timerRunning: isRunning, startTime: isRunning ? Date.now() : null } : task
       )
     );
-  };
+  }, []);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -128,7 +130,7 @@ const App = () => {
             filter={filter}
             setFilter={setFilter}
             onClearTask={onClearTask}
-            activeCount={activeTasksCount()}
+            activeCount={activeTasksCount}
           />
         </section>
       </div>
